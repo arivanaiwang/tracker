@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Melacak Lokasi</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #maptarget {
+            height: 400px; /* Tinggi peta */
+            width: 100%; /* Lebar peta */
+        }
+    </style>
+</head>
+<body>
+    <h1>Melacak Lokasi</h1>
+    <p>
+        <span id="latitude"></span><br>
+        <span id="longitude"></span> <!-- Perbaiki penamaan dari 'longtitude' ke 'longitude' -->
+    </p>
+    <hr>
+    <div id="maptarget"></div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script type="text/javascript">
+        navigator.geolocation.getCurrentPosition(function(position) {
+            const lat = position.coords.latitude;
+            const long = position.coords.longitude;
+            
+            // Tampilkan latitude dan longitude
+            document.getElementById('latitude').textContent = "Latitude: " + lat;
+            document.getElementById('longitude').textContent = "Longitude: " + long;
+            
+            // Inisialisasi peta
+            const map = L.map('maptarget').setView([lat, long], 10); // Koordinat default (Jakarta)
+
+        // Tambahkan layer peta dari OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+            // Set view peta ke lokasi pengguna
+            map.setView([lat, long], 13); // Zoom level 13
+
+            // Tambahkan marker di lokasi pengguna
+            L.marker([lat, long]).addTo(map)
+                .bindPopup('Anda berada di sini!')
+                .openPopup();
+        }, function(error) {
+            console.log("Error: " + error.message);
+        });
+    </script>
+</body>
+</html>
